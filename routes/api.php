@@ -11,4 +11,4 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::post('clock-in', [AbsensiController::class, 'clockIn']);
-Route::get('clock-out', [AbsensiController::class, 'clockOut']);
+Route::put('clock-out', [AbsensiController::class, 'clockOut']);

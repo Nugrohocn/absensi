@@ -44,23 +44,27 @@ class AbsensiController extends Controller
         // Ambil daftar time entry yang sedang berjalan
         $runningEntry = Http::withHeaders([
             'X-Api-Key' => $this->apiKey
-        ])->get("https://api.clockify.me/api/v1/workspaces/{$this->workspaceId}/user/{$this->userId}/time-entries?in-progress=true");
+        ])->get("{$this->apiUrl}/workspaces/{$this->workspaceId}/user/{$this->userId}/time-entries");
 
         $entries = $runningEntry->json();
+
+
 
         if (empty($entries) || !isset($entries[0]['id'])) {
             return response()->json(['message' => 'No active time entry found'], 404);
         }
 
+
         $timeEntryId = $entries[0]['id'];
         $startTime = $entries[0]['timeInterval']['start']; // Ambil waktu mulai
+
 
         // Stop Time Entry dengan metode PUT
         $endTime = now()->toIso8601String();
         $response = Http::withHeaders([
             'X-Api-Key' => $this->apiKey,
             'Content-Type' => 'application/json'
-        ])->put("https://api.clockify.me/api/v1/workspaces/{$this->workspaceId}/time-entries/{$timeEntryId}", [
+        ])->put("{$this->apiUrl}/workspaces/{$this->workspaceId}/time-entries/{$timeEntryId}", [
             "start" => $startTime,
             "end" => $endTime
         ]);
